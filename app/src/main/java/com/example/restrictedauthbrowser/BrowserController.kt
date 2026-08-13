@@ -6,6 +6,7 @@ import org.mozilla.geckoview.GeckoResult
 import org.mozilla.geckoview.GeckoSession
 import org.mozilla.geckoview.GeckoView
 import org.mozilla.geckoview.WebRequestError
+import java.util.List
 
 class BrowserController(
     private val view: GeckoView,
@@ -46,12 +47,17 @@ class BrowserController(
                 session: GeckoSession,
                 request: GeckoSession.NavigationDelegate.LoadRequest
             ): GeckoResult<AllowOrDeny> {
-                val uri = Uri.parse(request.uri)
                 if (request.isRedirect) SafeLog.d("redirect: ${SafeLog.sanitize(request.uri)}")
-                return when (policy.evaluate(uri)) {
+                return when (policy.evaluate(request.uri)) {
                     NavigationDecision.ALLOW -> {
                         SafeLog.d("navigation allowed: ${SafeLog.sanitize(request.uri)}")
-                        GeckoResult.fromValue(AllowOrDeny.ALLOW)
+                        if (request.target == GeckoSession.NavigationDelegate.TARGET_WINDOW_NEW) {
+                            // Preserve the single-session model for target=_blank/OAuth popups.
+                            session.loadUri(request.uri)
+                            GeckoResult.fromValue(AllowOrDeny.DENY)
+                        } else {
+                            GeckoResult.fromValue(AllowOrDeny.ALLOW)
+                        }
                     }
                     NavigationDecision.BLOCK -> {
                         SafeLog.w("navigation blocked: ${SafeLog.sanitize(request.uri)}")
@@ -73,7 +79,12 @@ class BrowserController(
                 }
             }
 
-            override fun onLocationChange(session: GeckoSession, url: String?) {
+            override fun onLocationChange(
+                session: GeckoSession,
+                url: String?,
+                perms: List<GeckoSession.PermissionDelegate.ContentPermission>,
+                hasUserGesture: Boolean
+            ) {
                 url?.let { events.onLocationChanged(Uri.parse(it)) }
             }
 
@@ -106,8 +117,7 @@ class BrowserController(
     }
 
     fun load(rawUri: String) {
-        val uri = Uri.parse(rawUri)
-        when (policy.evaluate(uri)) {
+        when (policy.evaluate(rawUri)) {
             NavigationDecision.ALLOW -> session.loadUri(rawUri)
             else -> events.onNavigationError("No valid HTTP or HTTPS URL was supplied.")
         }
