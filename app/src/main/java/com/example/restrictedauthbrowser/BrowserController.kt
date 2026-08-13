@@ -6,7 +6,6 @@ import org.mozilla.geckoview.GeckoResult
 import org.mozilla.geckoview.GeckoSession
 import org.mozilla.geckoview.GeckoView
 import org.mozilla.geckoview.WebRequestError
-import java.util.List
 
 class BrowserController(
     private val view: GeckoView,
