@@ -1,9 +1,12 @@
 package com.example.restrictedauthbrowser
 
-import org.mozilla.geckoview.GeckoResult
-import org.mozilla.geckoview.GeckoSession
+class DomInspector {
+    @Volatile private var title: String? = null
 
-class DomInspector(private val session: GeckoSession) {
-    /** Safe proof-of-concept; does not mutate the document or expose a JS bridge. */
-    fun readTitle(): GeckoResult<Any> = session.evaluateJS("document.title")
+    /** Safe proof-of-concept equivalent to reading document.title. */
+    fun onTitleChanged(value: String?) {
+        title = value
+    }
+
+    fun readTitle(): String? = title
 }

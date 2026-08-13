@@ -12,7 +12,7 @@ Minimal Android browser for login, signup, and OAuth flows on devices where Chro
 ./gradlew test assembleDebug
 ```
 
-Open the repository root directly in Android Studio. GeckoView is pinned to `145.0.20251124145406`; Mozilla's Maven repository is configured in `settings.gradle.kts`.
+Open the repository root directly in Android Studio. GeckoView is pinned to `144.0.20251027123126`, the final stable release line compatible with API 21; Mozilla's Maven repository is configured in `settings.gradle.kts`.
 
 ## Architecture
 
@@ -21,7 +21,7 @@ Open the repository root directly in Android Studio. GeckoView is pinned to `145
 - `GeckoRuntimeProvider`: process-wide Gecko runtime.
 - `NavigationPolicy`: central `ALLOW` / `BLOCK` / `OPEN_EXTERNAL` decision point.
 - `ExternalIntentHandler`: safely hands supported custom schemes back to Android.
-- `DomInspector`: non-mutating JavaScript proof of concept (`document.title`).
+- `DomInspector`: non-mutating page-title observation through GeckoView's public content delegate. Arbitrary future JavaScript evaluation must use a narrowly scoped WebExtension messaging channel because GeckoView 144 has no public `evaluateJS` API.
 - `SafeLog`: strips paths, credentials, queries, and fragments from logged URLs.
 
 ## MVP limitations

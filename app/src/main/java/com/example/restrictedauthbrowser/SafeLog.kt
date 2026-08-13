@@ -1,7 +1,7 @@
 package com.example.restrictedauthbrowser
 
-import android.net.Uri
 import android.util.Log
+import java.net.URI
 
 object SafeLog {
     private const val TAG = "RestrictedAuthBrowser"
@@ -10,7 +10,7 @@ object SafeLog {
     fun sanitize(raw: String?): String {
         if (raw.isNullOrBlank()) return "<empty>"
         return try {
-            val uri = Uri.parse(raw)
+            val uri = URI(raw)
             val scheme = uri.scheme ?: return "<invalid-uri>"
             if (scheme.equals("http", true) || scheme.equals("https", true)) {
                 val host = uri.host ?: return "${scheme.lowercase()}://<invalid-host>"
