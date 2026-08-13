@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Restricted Auth Browser</string>
+    <string name="close">Close</string>
+    <string name="loading">Loading</string>
+    <string name="no_page">No page loaded</string>
+    <string name="invalid_url">No valid HTTP or HTTPS URL was supplied.</string>
+    <string name="load_failed">This page could not be loaded.</string>
+</resources>
