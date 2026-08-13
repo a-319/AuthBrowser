@@ -20,7 +20,7 @@ class BrowserController(
     }
 
     private val session = GeckoSession()
-    val domInspector = DomInspector(session)
+    val domInspector = DomInspector()
     var canGoBack: Boolean = false
         private set
 
@@ -34,11 +34,13 @@ class BrowserController(
             override fun onPageStop(session: GeckoSession, success: Boolean) {
                 events.onLoadingChanged(false)
                 if (success) {
-                    domInspector.readTitle().accept(
-                        { title -> SafeLog.d("page title available (${title?.toString()?.length ?: 0} chars)") },
-                        { error -> SafeLog.w("title inspection failed", error) }
-                    )
+                    SafeLog.d("page title available (${domInspector.readTitle()?.length ?: 0} chars)")
                 }
+            }
+        }
+        session.contentDelegate = object : GeckoSession.ContentDelegate {
+            override fun onTitleChange(session: GeckoSession, title: String?) {
+                domInspector.onTitleChanged(title)
             }
         }
         session.navigationDelegate = object : GeckoSession.NavigationDelegate {
