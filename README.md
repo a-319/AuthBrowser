@@ -12,7 +12,7 @@ Minimal Android browser for login, signup, and OAuth flows on devices where Chro
 ./gradlew test assembleDebug
 ```
 
-Open the repository root directly in Android Studio. GeckoView is pinned to `145.0.20251124145406`; Mozilla's Maven repository is configured in `settings.gradle.kts`.
+Open the repository root directly in Android Studio. GeckoView is pinned to `144.0.20251027123126`, the final stable release line compatible with API 21; Mozilla's Maven repository is configured in `settings.gradle.kts`.
 
 ## Architecture
 
