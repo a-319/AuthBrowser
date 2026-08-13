@@ -42,7 +42,7 @@ class MainActivity : Activity(), BrowserController.Events {
     private fun handleIntent(intent: Intent?) {
         val uri = intent?.takeIf { it.action == Intent.ACTION_VIEW }?.data
         SafeLog.d("intent URL: ${SafeLog.sanitize(uri?.toString())}")
-        if (uri == null || DefaultNavigationPolicy().evaluate(uri) != NavigationDecision.ALLOW || uri.host.isNullOrBlank()) {
+        if (uri == null || DefaultNavigationPolicy().evaluate(uri.toString()) != NavigationDecision.ALLOW || uri.host.isNullOrBlank()) {
             onNavigationError(getString(R.string.invalid_url))
             return
         }
